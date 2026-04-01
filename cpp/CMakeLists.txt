@@ -27,7 +27,7 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
 add_executable(${PROJECT_NAME}
-    drm_display.cc
+    fb0_display.cc
     main.cc
     postprocess.cc
     ${rknpu_yolo26_file}

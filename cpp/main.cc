@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include "yolo26.h"
-#include "drm_display.h"
+#include "fb0_display.h"
 #include "image_utils.h"
 #include "file_utils.h"
 #include "image_drawing.h"
@@ -61,10 +61,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    DrmDisplay drm_display;
-    if (!drm_display.init())
+    Fb0Display fb0_display;
+    if (!fb0_display.init())
     {
-        std::cerr << "Failed to initialize DRM display." << std::endl;
+        std::cerr << "Failed to initialize fb0 display." << std::endl;
         cap.release();
         release_yolo26_model(&rknn_app_ctx);
         deinit_post_process();
@@ -240,9 +240,9 @@ int main(int argc, char **argv)
         draw_text(&src_image, fps_text, 10, 30, COLOR_YELLOW, 10);
 
         cv::Mat result_mat(src_image.height, src_image.width, CV_8UC3, src_image.virt_addr, src_image.width_stride);
-        if (!drm_display.present(result_mat))
+        if (!fb0_display.present(result_mat))
         {
-            std::cerr << "Failed to present frame through DRM." << std::endl;
+            std::cerr << "Failed to present frame through fb0." << std::endl;
             break;
         }
     }
@@ -253,7 +253,7 @@ int main(int argc, char **argv)
     printf("Average FPS: %.2f over %d frames (%.2f seconds)\n", avg_fps, frame_count, total_elapsed_time);
 
     cap.release();
-    drm_display.deinit();
+    fb0_display.deinit();
 
     deinit_post_process();
 
