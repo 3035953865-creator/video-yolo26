@@ -19,7 +19,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils/ utils.out)
 # opencv
 include_directories(${SYSROOT})
 include_directories(${SYSROOT}/opencv4)
-set(OPENCV_LIBS opencv_core opencv_flann opencv_videoio opencv_video opencv_highgui opencv_imgcodecs opencv_imgproc)
+set(OPENCV_LIBS opencv_core opencv_flann opencv_videoio opencv_video opencv_imgcodecs opencv_imgproc)
 
 
 set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
@@ -27,6 +27,7 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
 add_executable(${PROJECT_NAME}
+    drm_display.cc
     main.cc
     postprocess.cc
     ${rknpu_yolo26_file}

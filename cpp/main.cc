@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include "yolo26.h"
+#include "drm_display.h"
 #include "image_utils.h"
 #include "file_utils.h"
 #include "image_drawing.h"
@@ -60,14 +61,22 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    DrmDisplay drm_display;
+    if (!drm_display.init())
+    {
+        std::cerr << "Failed to initialize DRM display." << std::endl;
+        cap.release();
+        release_yolo26_model(&rknn_app_ctx);
+        deinit_post_process();
+        return -1;
+    }
+
     image_buffer_t src_image;
     memset(&src_image, 0, sizeof(image_buffer_t));
     object_detect_result_list od_results;
 
     cv::Mat src_frame;
     cv::Mat rgb_frame;
-    cv::Mat display_frame;
-    cv::namedWindow("out", cv::WINDOW_NORMAL);
 
     int frame_count = 0;
     auto start_time = std::chrono::steady_clock::now();
@@ -231,12 +240,9 @@ int main(int argc, char **argv)
         draw_text(&src_image, fps_text, 10, 30, COLOR_YELLOW, 10);
 
         cv::Mat result_mat(src_image.height, src_image.width, CV_8UC3, src_image.virt_addr, src_image.width_stride);
-        cv::cvtColor(result_mat, display_frame, cv::COLOR_RGB2BGR);
-        cv::imshow("out", display_frame);
-
-        int key = cv::waitKey(1);
-        if (key == 'q' || key == 27)
+        if (!drm_display.present(result_mat))
         {
+            std::cerr << "Failed to present frame through DRM." << std::endl;
             break;
         }
     }
@@ -247,7 +253,7 @@ int main(int argc, char **argv)
     printf("Average FPS: %.2f over %d frames (%.2f seconds)\n", avg_fps, frame_count, total_elapsed_time);
 
     cap.release();
-    cv::destroyAllWindows();
+    drm_display.deinit();
 
     deinit_post_process();
 
