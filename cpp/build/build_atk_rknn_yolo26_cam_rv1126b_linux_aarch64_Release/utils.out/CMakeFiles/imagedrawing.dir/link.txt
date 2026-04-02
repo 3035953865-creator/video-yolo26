@@ -1,0 +1,2 @@
+/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-ar qc libimagedrawing.a  CMakeFiles/imagedrawing.dir/image_drawing.c.o
+/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-ranlib libimagedrawing.a

@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alientek/linux/video-yolo26/cpp/utils/common.h
+
+/home/alientek/linux/video-yolo26/cpp/utils/font.h
+
+/home/alientek/linux/video-yolo26/cpp/utils/image_drawing.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+image_drawing.h
+/home/alientek/linux/video-yolo26/cpp/utils/image_drawing.h
+font.h
+/home/alientek/linux/video-yolo26/cpp/utils/font.h
+
+/home/alientek/linux/video-yolo26/cpp/utils/image_drawing.h
+common.h
+/home/alientek/linux/video-yolo26/cpp/utils/common.h
+

@@ -1,0 +1,6 @@
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/./rknn_yolo26_cam
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/lib/librknnrt.so
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/model/coco_80_labels_list.txt
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/model/yolo26n-rv1126b.rknn
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/lib/librknnrt.so
+/home/alientek/linux/video-yolo26/cpp/install/rv1126b_linux_aarch64/atk_rknn_yolo26_cam/lib/librga.so

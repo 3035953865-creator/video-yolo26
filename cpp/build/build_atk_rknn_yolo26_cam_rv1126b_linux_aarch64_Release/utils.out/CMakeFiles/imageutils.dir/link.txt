@@ -1,0 +1,2 @@
+/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-ar qc libimageutils.a  CMakeFiles/imageutils.dir/image_utils.c.o
+/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-ranlib libimageutils.a

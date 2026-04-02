@@ -22,6 +22,8 @@ ROOT_PWD=$( cd "$( dirname $0 )" && cd -P "$( dirname "$SOURCE" )" && pwd )
 INSTALL_DIR=${ROOT_PWD}/install/${TARGET_PLATFORM}/${TARGET_SDK}
 BUILD_DIR=${ROOT_PWD}/build/build_${TARGET_SDK}_${TARGET_PLATFORM}_${BUILD_TYPE}
 BUILD_DEMO_PATH="./"
+NFS_OUTPUT_DIR="/home/alientek/linux/nfs"
+EXECUTABLE_NAME="rknn_${BUILD_DEMO_NAME}_cam"
 echo "==================================="
 echo "BUILD_DEMO_NAME=${BUILD_DEMO_NAME}"
 echo "BUILD_DEMO_PATH=${BUILD_DEMO_PATH}"
@@ -52,6 +54,14 @@ cmake ../../${BUILD_DEMO_PATH} \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 make -j4
 make install
+
+if [ -f "${INSTALL_DIR}/${EXECUTABLE_NAME}" ]; then
+    mkdir -p "${NFS_OUTPUT_DIR}"
+    cp -f "${INSTALL_DIR}/${EXECUTABLE_NAME}" "${NFS_OUTPUT_DIR}/"
+    echo "Copied ${EXECUTABLE_NAME} to ${NFS_OUTPUT_DIR}"
+else
+    echo -e "\e[91mExecutable \"${INSTALL_DIR}/${EXECUTABLE_NAME}\" does not exist, please check!\e[0m"
+fi
 
 # Check if there is a rknn model in the install directory
 suffix=".rknn"

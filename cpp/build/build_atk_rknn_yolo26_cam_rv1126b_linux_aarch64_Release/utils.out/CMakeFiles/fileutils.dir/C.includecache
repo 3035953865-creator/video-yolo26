@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alientek/linux/video-yolo26/cpp/utils/file_utils.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+
