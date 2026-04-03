@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
     fb0_display.cc
     main.cc
     postprocess.cc
+    utils/My_tran_fun.cc
     ${rknpu_yolo26_file}
 )
 
@@ -51,6 +52,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${LIBRKNNRT_INCLUDES}
 )
+
+set(NFS_SYNC_DIR "/home/alientek/linux/nfs")
+add_custom_target(sync_01_run_script ALL
+    COMMAND ${CMAKE_COMMAND}
+            -DSRC_SCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/01_run.sh
+            -DDST_DIR=${NFS_SYNC_DIR}
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sync_01_run_to_nfs.cmake
+    COMMENT "Sync 01_run.sh to ${NFS_SYNC_DIR}"
+)
+add_dependencies(sync_01_run_script ${PROJECT_NAME})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION .)
 install(FILES ${LIBRKNNRT} DESTINATION lib)

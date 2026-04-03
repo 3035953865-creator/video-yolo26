@@ -56,18 +56,6 @@ CMAKE_BINARY_DIR = /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yo
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -112,6 +100,18 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -155,6 +155,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named sync_01_run_script
+
+# Build rule for target.
+sync_01_run_script: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sync_01_run_script
+.PHONY : sync_01_run_script
+
+# fast build rule for target.
+sync_01_run_script/fast:
+	$(MAKE) -f CMakeFiles/sync_01_run_script.dir/build.make CMakeFiles/sync_01_run_script.dir/build
+.PHONY : sync_01_run_script/fast
 
 #=============================================================================
 # Target rules for targets named rknn_yolo26_cam
@@ -316,17 +329,45 @@ rknpu2/yolo26.cc.s:
 	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.s
 .PHONY : rknpu2/yolo26.cc.s
 
+utils/My_tran_fun.o: utils/My_tran_fun.cc.o
+
+.PHONY : utils/My_tran_fun.o
+
+# target to build an object file
+utils/My_tran_fun.cc.o:
+	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o
+.PHONY : utils/My_tran_fun.cc.o
+
+utils/My_tran_fun.i: utils/My_tran_fun.cc.i
+
+.PHONY : utils/My_tran_fun.i
+
+# target to preprocess a source file
+utils/My_tran_fun.cc.i:
+	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.i
+.PHONY : utils/My_tran_fun.cc.i
+
+utils/My_tran_fun.s: utils/My_tran_fun.cc.s
+
+.PHONY : utils/My_tran_fun.s
+
+# target to generate assembly for a file
+utils/My_tran_fun.cc.s:
+	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.s
+.PHONY : utils/My_tran_fun.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/local"
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... install/local"
+	@echo "... sync_01_run_script"
 	@echo "... install/strip"
 	@echo "... rknn_yolo26_cam"
 	@echo "... imageutils"
@@ -344,6 +385,9 @@ help:
 	@echo "... rknpu2/yolo26.o"
 	@echo "... rknpu2/yolo26.i"
 	@echo "... rknpu2/yolo26.s"
+	@echo "... utils/My_tran_fun.o"
+	@echo "... utils/My_tran_fun.i"
+	@echo "... utils/My_tran_fun.s"
 .PHONY : help
 
 

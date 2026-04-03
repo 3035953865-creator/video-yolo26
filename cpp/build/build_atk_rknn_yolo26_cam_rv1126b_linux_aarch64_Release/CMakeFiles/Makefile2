@@ -53,6 +53,7 @@ CMAKE_BINARY_DIR = /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yo
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/sync_01_run_script.dir/all
 all: CMakeFiles/rknn_yolo26_cam.dir/all
 all: 3rdparty.out/all
 all: utils.out/all
@@ -66,6 +67,7 @@ preinstall: utils.out/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/sync_01_run_script.dir/clean
 clean: CMakeFiles/rknn_yolo26_cam.dir/clean
 clean: 3rdparty.out/clean
 clean: utils.out/clean
@@ -113,6 +115,33 @@ utils.out/clean: utils.out/CMakeFiles/fileutils.dir/clean
 .PHONY : utils.out/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/sync_01_run_script.dir
+
+# All Build rule for target.
+CMakeFiles/sync_01_run_script.dir/all: CMakeFiles/rknn_yolo26_cam.dir/all
+	$(MAKE) -f CMakeFiles/sync_01_run_script.dir/build.make CMakeFiles/sync_01_run_script.dir/depend
+	$(MAKE) -f CMakeFiles/sync_01_run_script.dir/build.make CMakeFiles/sync_01_run_script.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=13 "Built target sync_01_run_script"
+.PHONY : CMakeFiles/sync_01_run_script.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/sync_01_run_script.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles 13
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/sync_01_run_script.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles 0
+.PHONY : CMakeFiles/sync_01_run_script.dir/rule
+
+# Convenience name for target.
+sync_01_run_script: CMakeFiles/sync_01_run_script.dir/rule
+
+.PHONY : sync_01_run_script
+
+# clean rule for target.
+CMakeFiles/sync_01_run_script.dir/clean:
+	$(MAKE) -f CMakeFiles/sync_01_run_script.dir/build.make CMakeFiles/sync_01_run_script.dir/clean
+.PHONY : CMakeFiles/sync_01_run_script.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/rknn_yolo26_cam.dir
 
 # All Build rule for target.
@@ -121,12 +150,12 @@ CMakeFiles/rknn_yolo26_cam.dir/all: utils.out/CMakeFiles/imagedrawing.dir/all
 CMakeFiles/rknn_yolo26_cam.dir/all: utils.out/CMakeFiles/fileutils.dir/all
 	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/depend
 	$(MAKE) -f CMakeFiles/rknn_yolo26_cam.dir/build.make CMakeFiles/rknn_yolo26_cam.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=7,8,9,10,11 "Built target rknn_yolo26_cam"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=7,8,9,10,11,12 "Built target rknn_yolo26_cam"
 .PHONY : CMakeFiles/rknn_yolo26_cam.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/rknn_yolo26_cam.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles 11
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles 12
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/rknn_yolo26_cam.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles 0
 .PHONY : CMakeFiles/rknn_yolo26_cam.dir/rule

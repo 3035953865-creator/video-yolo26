@@ -1,267 +1,206 @@
-/*****************************************************************************
- * @copyright Copyright luominghui Co., Ltd. 2026-2036. All rights reserved.
- * @link www.alientek.com / https://space.bilibili.com/9665395
- * @file main.cc
- * @brief Run YOLO26n on RV1126B and display detection results on a video file.
- * @author luominghui
- * @note 2026-1-16 v1.0:first release
- ****************************************************************************/
-
-/*-------------------------------------------
-                Includes
--------------------------------------------*/
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <chrono>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <thread>
 
 #include "yolo26.h"
-#include "fb0_display.h"
 #include "image_utils.h"
-#include "file_utils.h"
-#include "image_drawing.h"
 #include <opencv2/opencv.hpp>
 
-/*-------------------------------------------
-  Main Function
--------------------------------------------*/
-int main(int argc, char **argv)
+#include "My_tran_fun.h"//自己包装的封装函数
+
+using namespace std;
+using namespace cv;
+
+int main(int argc, char* argv[])
 {
-    if (argc != 3)
+    cout << "加LCD版本" << endl;
+    if (system("pidof weston > /dev/null 2>&1") == 0)
     {
-        printf("%s <model_path> <video_path>\n", argv[0]);
+        cout << "警告: 检测到 weston 正在运行，fb0 直写可能被桌面覆盖，建议先停 weston 再运行。" << endl;
+    }
+    // 单独LCD测试模式：无参数或 --lcd-test 都可进入
+    if (argc == 1 || (argc == 2 && strcmp(argv[1], "--lcd-test") == 0))
+    {
+        if (open_lcd() != 0)
+        {
+            cout << "打开LCD失败" << endl;
+            return -1;
+        }
+
+        // 先显示纯色块，快速判断 RGB 通道是否正常
+        cv::Mat red_img(240, 320, CV_8UC3, cv::Scalar(0, 0, 255));   // BGR: Red
+        cv::Mat green_img(240, 320, CV_8UC3, cv::Scalar(0, 255, 0)); // BGR: Green
+        cv::Mat blue_img(240, 320, CV_8UC3, cv::Scalar(255, 0, 0));  // BGR: Blue
+        cv::Mat white_img(240, 320, CV_8UC3, cv::Scalar(255, 255, 255));
+        cv::Mat black_img(240, 320, CV_8UC3, cv::Scalar(0, 0, 0));
+
+        display_on_lcd(red_img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        display_on_lcd(green_img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        display_on_lcd(blue_img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        display_on_lcd(white_img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        display_on_lcd(black_img);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        int ret = lcd_color_test(3000);
+        close_lcd();
+        return ret;
+    }
+
+    //检查参数
+    if(argc != 3)
+    {
+        cout << "使用说明: " << argv[0] << " <模型路径> <视频路径>" << endl;
+        cout << "LCD测试: " << argv[0] << " 或 " << argv[0] << " --lcd-test" << endl;
         return -1;
     }
 
-    const char *model_path = argv[1];
-    const char *video_path = argv[2];
+    const char* MODEL_PATH = argv[1];
+    const char* VIDEO_PATH = argv[2];
 
-    int ret;
-    rknn_app_context_t rknn_app_ctx;
-    memset(&rknn_app_ctx, 0, sizeof(rknn_app_context_t));
+    //加载模型
+    rknn_app_context_t app_ctx;//模型应用上下文对象
+    memset(&app_ctx, 0, sizeof(rknn_app_context_t));//初始化上下文对象（内存清零）
 
     init_post_process();
-
-    ret = init_yolo26_model(model_path, &rknn_app_ctx);
-    if (ret != 0)
+    if (init_yolo26_model(MODEL_PATH, &app_ctx) != 0)
     {
-        printf("init_yolo26_model fail! ret=%d model_path=%s\n", ret, model_path);
+        cout << "加载模型失败: " << MODEL_PATH << endl;
         deinit_post_process();
         return -1;
     }
 
-    cv::VideoCapture cap(video_path);
-    if (!cap.isOpened())
+    //打开LCD
+    if (open_lcd() != 0)
     {
-        std::cerr << "Failed to open the video file: " << video_path << std::endl;
-        release_yolo26_model(&rknn_app_ctx);
+        cout << "打开LCD失败" << endl;
+        release_yolo26_model(&app_ctx);
         deinit_post_process();
         return -1;
     }
-
-    Fb0Display fb0_display;
-    if (!fb0_display.init())
+    lcd_color_test(1500); // 上电后先显示1.5秒彩条，验证LCD颜色通道是否正常
+    
+    //加载视频(opencv)
+    VideoCapture cap(VIDEO_PATH);
+    if(!cap.isOpened())   
     {
-        std::cerr << "Failed to initialize fb0 display." << std::endl;
-        cap.release();
-        release_yolo26_model(&rknn_app_ctx);
+        cout << "无法打开视频文件: " << argv[2] << endl;
+        release_yolo26_model(&app_ctx);
         deinit_post_process();
         return -1;
     }
+    cout << "视频打开成功: " << VIDEO_PATH << endl;
+    cout << "视频信息: " << static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH))
+         << "x" << static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT))
+         << " fps=" << cap.get(cv::CAP_PROP_FPS) << endl;
 
-    image_buffer_t src_image;
-    memset(&src_image, 0, sizeof(image_buffer_t));
+    Mat frame;
+    Mat rgb_frame;
+    image_buffer_t img_buf;
+    memset(&img_buf, 0, sizeof(img_buf));
     object_detect_result_list od_results;
-
-    cv::Mat src_frame;
-    cv::Mat rgb_frame;
-
-    int frame_count = 0;
-    auto start_time = std::chrono::steady_clock::now();
-    double fps = 0.0;
-
-    double recent_npu_times[10] = {0};
-    int npu_time_index = 0;
-    int npu_time_count = 0;
-    double avg_npu_time = 0.0;
-    double npu_fps = 0.0;
-
-    while (cap.read(src_frame))
+    memset(&od_results, 0, sizeof(od_results));
+    int frame_id = 0;
+    int empty_frame_count = 0;
+    while(true)
     {
-        if (src_frame.empty())
+        //读取视频帧，这里进行了>>重载，直接将帧数据读入Mat对象
+        cap >> frame;
+        if(frame.empty()) //如果帧数据为空，说明视频结束了
         {
-            std::cerr << "Video reached the end or failed to read frame." << std::endl;
+            empty_frame_count++;
+            if (empty_frame_count <= 30)
+            {
+                if (empty_frame_count == 1)
+                {
+                    cout << "读取到空帧，等待视频流稳定..." << endl;
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(30));
+                continue;
+            }
+            cout << "连续空帧，退出播放" << endl;
             break;
         }
+        empty_frame_count = 0;
+        frame_id++;
+        Mat display_frame = frame.clone();
 
-        cv::cvtColor(src_frame, rgb_frame, cv::COLOR_BGR2RGB);
+        // 先显示原始帧，避免推理阻塞时LCD无画面
+        display_on_lcd(display_frame);
 
-        src_image.height = rgb_frame.rows;
-        src_image.width = rgb_frame.cols;
-        src_image.width_stride = rgb_frame.step[0];
-        src_image.virt_addr = rgb_frame.data;
-        src_image.format = IMAGE_FORMAT_RGB888;
-        src_image.size = rgb_frame.total() * rgb_frame.elemSize();
+        cv_frame_to_image_buffer(frame, rgb_frame, &img_buf); //将OpenCV的Mat对象转换为我们定义的image_buffer_t结构体
 
-        image_buffer_t dst_img;
-        letterbox_t letter_box;
-        rknn_input inputs[rknn_app_ctx.io_num.n_input];
-        rknn_output outputs[rknn_app_ctx.io_num.n_output];
-        const float nms_threshold = NMS_THRESH;
-        const float box_conf_threshold = BOX_THRESH;
-        int bg_color = 114;
-
-        memset(&od_results, 0x00, sizeof(od_results));
-        memset(&letter_box, 0, sizeof(letterbox_t));
-        memset(&dst_img, 0, sizeof(image_buffer_t));
-        memset(inputs, 0, sizeof(inputs));
-        memset(outputs, 0, sizeof(outputs));
-
-        dst_img.width = rknn_app_ctx.model_width;
-        dst_img.height = rknn_app_ctx.model_height;
-        dst_img.format = IMAGE_FORMAT_RGB888;
-        dst_img.size = get_image_size(&dst_img);
-        dst_img.virt_addr = (unsigned char *)malloc(dst_img.size);
-        if (dst_img.virt_addr == NULL)
+        //模型推理
+        auto infer_start = std::chrono::steady_clock::now();
+        if (inference_yolo26_model(&app_ctx, &img_buf, &od_results) != 0)
         {
-            printf("malloc buffer size:%d fail!\n", dst_img.size);
-            cap.release();
-            release_yolo26_model(&rknn_app_ctx);
-            deinit_post_process();
-            return -1;
+            cout << "模型推理失败, 帧号: " << frame_id << endl;
+            cv::putText(display_frame, "INFERENCE FAILED", cv::Point(20, 40),
+                        cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
+            display_on_lcd(display_frame);
+            continue;
+        }
+        auto infer_end = std::chrono::steady_clock::now();
+        double infer_ms = std::chrono::duration<double, std::milli>(infer_end - infer_start).count();
+
+        cout << "Frame " << frame_id << ", 检测目标数: " << od_results.count
+             << ", 推理耗时: " << fixed << setprecision(1) << infer_ms << " ms" << endl;
+        for (int i = 0; i < od_results.count; ++i)
+        {
+            const object_detect_result& det = od_results.results[i];
+            const char* class_name = coco_cls_to_name(det.cls_id);
+            int x1 = std::max(0, det.box.left);
+            int y1 = std::max(0, det.box.top);
+            int x2 = std::min(display_frame.cols - 1, det.box.right);
+            int y2 = std::min(display_frame.rows - 1, det.box.bottom);
+            if (x2 <= x1 || y2 <= y1)
+            {
+                continue;
+            }
+
+            cout << "  [" << i << "] "
+                 << "class=" << (class_name ? class_name : "unknown")
+                 << " id=" << det.cls_id
+                 << " score=" << fixed << setprecision(3) << det.prop
+                 << " box=("
+                 << det.box.left << ","
+                 << det.box.top << ","
+                 << det.box.right << ","
+                 << det.box.bottom << ")"
+                 << endl;
+
+            cv::rectangle(display_frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 255, 0), 2);
+            std::ostringstream oss;
+            oss << (class_name ? class_name : "unknown")
+                << " " << std::fixed << std::setprecision(2) << det.prop;
+            int text_y = std::max(20, y1 - 5);
+            cv::putText(display_frame, oss.str(), cv::Point(x1, text_y), cv::FONT_HERSHEY_SIMPLEX, 0.6,
+                        cv::Scalar(0, 255, 255), 2, cv::LINE_AA);
         }
 
-        ret = convert_image_with_letterbox(&src_image, &dst_img, &letter_box, bg_color);
-        if (ret < 0)
+        //lcd显示
         {
-            printf("convert_image_with_letterbox fail! ret=%d\n", ret);
-            free(dst_img.virt_addr);
-            cap.release();
-            release_yolo26_model(&rknn_app_ctx);
-            deinit_post_process();
-            return -1;
+            std::ostringstream info;
+            info << "Frame: " << frame_id << "  Obj: " << od_results.count;
+            cv::putText(display_frame, info.str(), cv::Point(20, 35), cv::FONT_HERSHEY_SIMPLEX, 0.9,
+                        cv::Scalar(255, 0, 0), 2, cv::LINE_AA);
         }
-
-        inputs[0].index = 0;
-        inputs[0].type = RKNN_TENSOR_UINT8;
-        inputs[0].fmt = RKNN_TENSOR_NHWC;
-        inputs[0].size = rknn_app_ctx.model_width * rknn_app_ctx.model_height * rknn_app_ctx.model_channel;
-        inputs[0].buf = dst_img.virt_addr;
-
-        ret = rknn_inputs_set(rknn_app_ctx.rknn_ctx, rknn_app_ctx.io_num.n_input, inputs);
-        free(dst_img.virt_addr);
-        if (ret < 0)
-        {
-            printf("rknn_input_set fail! ret=%d\n", ret);
-            cap.release();
-            release_yolo26_model(&rknn_app_ctx);
-            deinit_post_process();
-            return -1;
-        }
-
-        auto npu_start = std::chrono::steady_clock::now();
-        ret = rknn_run(rknn_app_ctx.rknn_ctx, nullptr);
-        if (ret < 0)
-        {
-            printf("rknn_run fail! ret=%d\n", ret);
-            cap.release();
-            release_yolo26_model(&rknn_app_ctx);
-            deinit_post_process();
-            return -1;
-        }
-        auto npu_end = std::chrono::steady_clock::now();
-        double current_npu_time = std::chrono::duration<double, std::milli>(npu_end - npu_start).count();
-
-        recent_npu_times[npu_time_index] = current_npu_time;
-        npu_time_index = (npu_time_index + 1) % 10;
-        if (npu_time_count < 10)
-        {
-            npu_time_count++;
-        }
-
-        double total_npu_time = 0.0;
-        for (int i = 0; i < npu_time_count; i++)
-        {
-            total_npu_time += recent_npu_times[i];
-        }
-        avg_npu_time = total_npu_time / npu_time_count;
-        npu_fps = avg_npu_time > 0 ? 1000.0 / avg_npu_time : 0.0;
-
-        for (int i = 0; i < rknn_app_ctx.io_num.n_output; i++)
-        {
-            outputs[i].index = i;
-            outputs[i].want_float = (!rknn_app_ctx.is_quant);
-        }
-        ret = rknn_outputs_get(rknn_app_ctx.rknn_ctx, rknn_app_ctx.io_num.n_output, outputs, NULL);
-        if (ret < 0)
-        {
-            printf("rknn_outputs_get fail! ret=%d\n", ret);
-            cap.release();
-            release_yolo26_model(&rknn_app_ctx);
-            deinit_post_process();
-            return -1;
-        }
-
-        post_process(&rknn_app_ctx, outputs, &letter_box, box_conf_threshold, nms_threshold, &od_results);
-        rknn_outputs_release(rknn_app_ctx.rknn_ctx, rknn_app_ctx.io_num.n_output, outputs);
-
-        char text[256];
-        for (int i = 0; i < od_results.count; i++)
-        {
-            object_detect_result *det_result = &(od_results.results[i]);
-            printf("%s @ (%d %d %d %d) %.3f\n", coco_cls_to_name(det_result->cls_id),
-                   det_result->box.left, det_result->box.top,
-                   det_result->box.right, det_result->box.bottom,
-                   det_result->prop);
-
-            int x1 = det_result->box.left;
-            int y1 = det_result->box.top;
-            int x2 = det_result->box.right;
-            int y2 = det_result->box.bottom;
-
-            draw_rectangle(&src_image, x1, y1, x2 - x1, y2 - y1, 0x4500FFFF, 3);
-
-            sprintf(text, "%s %.1f%%", coco_cls_to_name(det_result->cls_id), det_result->prop * 100);
-            draw_text(&src_image, text, x1, y1 - 20, 0x4500FFFF, 10);
-        }
-
-        frame_count++;
-        if (frame_count % 10 == 0)
-        {
-            auto current_time = std::chrono::steady_clock::now();
-            double elapsed_time = std::chrono::duration<double>(current_time - start_time).count();
-            fps = frame_count / elapsed_time;
-        }
-
-        char fps_text[128];
-        sprintf(fps_text, "video FPS: %.1f\nNPU fps: %.1f", fps, npu_fps);
-        draw_text(&src_image, fps_text, 10, 30, COLOR_YELLOW, 10);
-
-        cv::Mat result_mat(src_image.height, src_image.width, CV_8UC3, src_image.virt_addr, src_image.width_stride);
-        if (!fb0_display.present(result_mat))
-        {
-            std::cerr << "Failed to present frame through fb0." << std::endl;
-            break;
-        }
+        display_on_lcd(display_frame);
     }
-
-    auto end_time = std::chrono::steady_clock::now();
-    double total_elapsed_time = std::chrono::duration<double>(end_time - start_time).count();
-    double avg_fps = total_elapsed_time > 0 ? frame_count / total_elapsed_time : 0.0;
-    printf("Average FPS: %.2f over %d frames (%.2f seconds)\n", avg_fps, frame_count, total_elapsed_time);
 
     cap.release();
-    fb0_display.deinit();
-
+    close_lcd();
+    release_yolo26_model(&app_ctx);
     deinit_post_process();
-
-    ret = release_yolo26_model(&rknn_app_ctx);
-    if (ret != 0)
-    {
-        printf("release_yolo26_model fail! ret=%d\n", ret);
-    }
 
     return 0;
 }

@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/alientek/linux/video-yolo26/cpp/main.cc" "/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rknn_yolo26_cam.dir/main.cc.o"
   "/home/alientek/linux/video-yolo26/cpp/postprocess.cc" "/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.o"
   "/home/alientek/linux/video-yolo26/cpp/rknpu2/yolo26.cc" "/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o"
+  "/home/alientek/linux/video-yolo26/cpp/utils/My_tran_fun.cc" "/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

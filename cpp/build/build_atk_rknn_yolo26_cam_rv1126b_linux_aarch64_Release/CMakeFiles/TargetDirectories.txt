@@ -1,8 +1,9 @@
-/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/install/local.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/install.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/list_install_components.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rebuild_cache.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/edit_cache.dir
+/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/install/local.dir
+/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/sync_01_run_script.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/install/strip.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles/rknn_yolo26_cam.dir
 /home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/3rdparty.out/CMakeFiles/install/strip.dir

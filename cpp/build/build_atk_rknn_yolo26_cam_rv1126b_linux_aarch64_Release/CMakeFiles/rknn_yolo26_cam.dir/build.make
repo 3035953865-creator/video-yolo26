@@ -96,9 +96,22 @@ CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.s"
 	/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-g++ --sysroot=/opt/atk-dlrv1126b-toolchain/aarch64-buildroot-linux-gnu/sysroot $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alientek/linux/video-yolo26/cpp/postprocess.cc -o CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.s
 
+CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o: CMakeFiles/rknn_yolo26_cam.dir/flags.make
+CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o: ../../utils/My_tran_fun.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o"
+	/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-g++ --sysroot=/opt/atk-dlrv1126b-toolchain/aarch64-buildroot-linux-gnu/sysroot  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o -c /home/alientek/linux/video-yolo26/cpp/utils/My_tran_fun.cc
+
+CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.i"
+	/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-g++ --sysroot=/opt/atk-dlrv1126b-toolchain/aarch64-buildroot-linux-gnu/sysroot $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alientek/linux/video-yolo26/cpp/utils/My_tran_fun.cc > CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.i
+
+CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.s"
+	/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-g++ --sysroot=/opt/atk-dlrv1126b-toolchain/aarch64-buildroot-linux-gnu/sysroot $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alientek/linux/video-yolo26/cpp/utils/My_tran_fun.cc -o CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.s
+
 CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o: CMakeFiles/rknn_yolo26_cam.dir/flags.make
 CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o: ../../rknpu2/yolo26.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o"
 	/opt/atk-dlrv1126b-toolchain/bin/aarch64-buildroot-linux-gnu-g++ --sysroot=/opt/atk-dlrv1126b-toolchain/aarch64-buildroot-linux-gnu/sysroot  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o -c /home/alientek/linux/video-yolo26/cpp/rknpu2/yolo26.cc
 
 CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.i: cmake_force
@@ -114,6 +127,7 @@ rknn_yolo26_cam_OBJECTS = \
 "CMakeFiles/rknn_yolo26_cam.dir/fb0_display.cc.o" \
 "CMakeFiles/rknn_yolo26_cam.dir/main.cc.o" \
 "CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.o" \
+"CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o" \
 "CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o"
 
 # External object files for target rknn_yolo26_cam
@@ -122,6 +136,7 @@ rknn_yolo26_cam_EXTERNAL_OBJECTS =
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/fb0_display.cc.o
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/main.cc.o
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/postprocess.cc.o
+rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/utils/My_tran_fun.cc.o
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/rknpu2/yolo26.cc.o
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/build.make
 rknn_yolo26_cam: utils.out/libimageutils.a
@@ -131,7 +146,7 @@ rknn_yolo26_cam: ../../3rdparty/rknpu2/Linux/aarch64/librknnrt.so
 rknn_yolo26_cam: ../../3rdparty/jpeg_turbo/Linux/aarch64/libturbojpeg.a
 rknn_yolo26_cam: ../../3rdparty/librga/Linux/aarch64/librga.a
 rknn_yolo26_cam: CMakeFiles/rknn_yolo26_cam.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable rknn_yolo26_cam"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alientek/linux/video-yolo26/cpp/build/build_atk_rknn_yolo26_cam_rv1126b_linux_aarch64_Release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable rknn_yolo26_cam"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/rknn_yolo26_cam.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

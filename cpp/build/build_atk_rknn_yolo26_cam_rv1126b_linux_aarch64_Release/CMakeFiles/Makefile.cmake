@@ -55,6 +55,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/sync_01_run_script.dir/DependInfo.cmake"
   "CMakeFiles/rknn_yolo26_cam.dir/DependInfo.cmake"
   "utils.out/CMakeFiles/imageutils.dir/DependInfo.cmake"
   "utils.out/CMakeFiles/imagedrawing.dir/DependInfo.cmake"
